@@ -1,0 +1,15 @@
+export const business = Object.freeze({
+  name: 'City Wide Facility Solutions – Southwest Los Angeles',
+  shortName: 'City Wide Southwest Los Angeles',
+  url: 'https://www.gocitywideswla.com',
+  phone: '(562) 473-3136', telephone: '+15624733136',
+  address: { streetAddress: '2750 N Bellflower Boulevard, Suite 206', addressLocality: 'Long Beach', addressRegion: 'CA', postalCode: '90815', addressCountry: 'US' },
+  contactRoute: '/request-walkthrough/',
+  parent: { name: 'City Wide Facility Solutions', url: 'https://gocitywide.com/' },
+  leadership: { name: 'Sam Lee', role: 'Owner & President', photo: '/assets/sam-lee.jpg', biography: 'Sam Lee launched City Wide of Southwest Los Angeles in early 2022. As a locally invested owner, Sam focuses on client retention, responsive service, and direct accountability, backed by the resources and systems of the City Wide network.', quote: 'We treat every building like it’s our own — with full responsibility, attention to detail, and decisions made in our clients’ best interest.' },
+  metrics: [{ value: '150+', label: 'Facilities' }, { value: '1.5M+', label: 'Sq. Ft.' }, { value: '100+', label: 'Service Crews' }],
+  areas: ['Long Beach', 'Torrance', 'Carson', 'El Segundo', 'Culver City', 'Inglewood'],
+  profiles: ['https://gocitywide.com/southwestlosangeles/'],
+  verifiedAt: '2026-09-16',
+  contactSource: 'https://gocitywide.com/southwestlosangeles/contact/',
+});
