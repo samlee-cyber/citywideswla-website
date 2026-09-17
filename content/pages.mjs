@@ -1,20 +1,6 @@
-import { business } from './business.mjs';
+import { business, serviceCatalogue } from './business.mjs';
 const supplied = ['Owner implementation brief and service proposal, 2026-09-16'];
-export const serviceCatalogue = [
- ['commercial-cleaning','Commercial Cleaning & Janitorial','Recurring cleaning, day porter support, and coordinated care for the spaces people use every day.','clean'],
- ['janitorial-consumables','Janitorial Consumables','Toilet paper, soap, towels, and breakroom supplies, managed and replenished.','bottle'],
- ['lawn-maintenance','Lawn Maintenance','Mowing, edging, and landscape projects to keep your grounds presentable.','tree'],
- ['hard-floor-care','Hard Floor Care','Strip, refinish, and protect resilient tile and hard-surface floors.','floor'],
- ['carpet-care','Carpet Care','Extraction, bonnet, and dry-foam cleaning matched to carpet type and traffic.','carpet'],
- ['window-washing','Window Washing','Interior and exterior window cleaning, from ground level to high-rise.','window'],
- ['pressure-washing','Pressure Washing','Remove built-up grime from building exteriors, walkways, and parking surfaces.','spray'],
- ['handyman-services','Handyman Services','Small repairs and projects for drywall, fixtures, hardware, and general upkeep.','hammer'],
- ['plumbing','Plumbing','Licensed plumbers for repairs, replacements, and preventive maintenance.','wrench'],
- ['electrical','Electrical','Electrical services, including high-voltage and hard-to-reach lighting replacement.','bolt'],
- ['hvac','HVAC','Heating, cooling, and ventilation service for your building systems.','air'],
- ['parking-lot-services','Parking Lot Services','Striping, pothole repair, resurfacing, and sweeping for your parking areas.','parking'],
- ['tenant-improvement','Tenant Improvement','Interior and exterior painting and build-out support for tenant-ready spaces.','roller'],
-];
+export { serviceCatalogue } from './business.mjs';
 export const industryCatalogue = [
  ['logistics-distribution','Logistics & Distribution','Facility care planned around access, traffic, shifts, and the spaces that support your operation.'],
  ['commercial-office','Commercial Office','Cleaning and facility services for workspaces, meeting rooms, and shared areas.'],
@@ -53,7 +39,7 @@ export const pages = [
  ...industryCatalogue.map(([slug,label,summary])=>page(`/industries/${slug}/`,'industry',label,summary,{summary,h1:`Facility Services for ${label} in Southwest Los Angeles`,relationships:['/services/commercial-cleaning/','/services/','/locations/','/case-studies/']})),
  ...business.areas.map(city=>page(`/locations/${city.toLowerCase().replaceAll(' ','-')}/`,'location',city,`Commercial cleaning and facility services in ${city}. Discuss your property with City Wide Southwest Los Angeles.`,{city,h1:`Commercial Cleaning & Facility Services in ${city}`,relationships:['/services/commercial-cleaning/','/services/','/industries/','/case-studies/','/locations/']})),
  ...resourceCatalogue.map(([slug,label])=>page(`/resources/${slug}/`,'resource',label,`A planned City Wide guide: ${label}. This resource is in development.`,{relationships:['/services/commercial-cleaning/','/resources/']})),
- ready(page('/about/','about','About City Wide Southwest Los Angeles','Meet owner Sam Lee and the local City Wide team. One point of contact for commercial cleaning and facility services, based in Long Beach.',{navOrder:6,h1:'Local ownership. Personal accountability.'})),
+ ready(page('/about/','about','About City Wide Southwest Los Angeles','Meet owner Sam Lee and the local City Wide team. One point of contact for commercial cleaning and facility services, based in Long Beach.',{label:'About',navOrder:6,h1:'Local ownership. Personal accountability.'})),
  ready(page('/request-walkthrough/','action','Request a Walkthrough','Tell City Wide Southwest Los Angeles about your facility and service priorities. Request a commercial cleaning or facility services walkthrough.',{h1:'Request a Commercial Cleaning or Facility Services Walkthrough.',navOrder:7})),
  ready(page('/privacy/','page','Privacy Notice','How City Wide Southwest Los Angeles uses information submitted through this website.',{content:[{heading:'Information you choose to share',paragraphs:['The walkthrough form asks for contact and facility details so our local team can review your inquiry and respond. Please avoid sending sensitive personal, medical, or confidential business information.']},{heading:'Handling your request',paragraphs:['When online delivery is enabled, form details are sent through our email delivery provider, Resend, to the configured local intake inbox. Our website hosting provider processes requests to operate this site. A separate security store supports rate limiting and duplicate prevention using keyed fingerprints rather than your form text.']},{heading:'Cookies and measurement',paragraphs:['Essential, short-lived cookies protect form submission and show a genuine receipt. No advertising or analytics vendor is installed in this version. Optional measurement events are enabled only with explicit analytics consent and do not include form text, email addresses, or phone numbers.']},{heading:'Contact and questions',paragraphs:['To ask about information you have shared, contact our local office at (562) 473-3136 or 2750 N Bellflower Boulevard, Suite 206, Long Beach, CA 90815.'] }]})),
  page('/request-received/','utility','Your Walkthrough Request','Check the status of your City Wide walkthrough request.'),

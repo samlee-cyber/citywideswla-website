@@ -1,9 +1,26 @@
+export const serviceCatalogue = [
+ ['commercial-cleaning','Commercial Cleaning & Janitorial','Recurring cleaning, day porter support, and coordinated care for the spaces people use every day.','clean'],
+ ['janitorial-consumables','Janitorial Consumables','Toilet paper, soap, towels, and breakroom supplies, managed and replenished.','bottle'],
+ ['lawn-maintenance','Lawn Maintenance','Mowing, edging, and landscape projects to keep your grounds presentable.','tree'],
+ ['hard-floor-care','Hard Floor Care','Strip, refinish, and protect resilient tile and hard-surface floors.','floor'],
+ ['carpet-care','Carpet Care','Extraction, bonnet, and dry-foam cleaning matched to carpet type and traffic.','carpet'],
+ ['window-washing','Window Washing','Interior and exterior window cleaning, from ground level to high-rise.','window'],
+ ['pressure-washing','Pressure Washing','Remove built-up grime from building exteriors, walkways, and parking surfaces.','spray'],
+ ['handyman-services','Handyman Services','Small repairs and projects for drywall, fixtures, hardware, and general upkeep.','hammer'],
+ ['plumbing','Plumbing','Licensed plumbers for repairs, replacements, and preventive maintenance.','wrench'],
+ ['electrical','Electrical','Electrical services, including high-voltage and hard-to-reach lighting replacement.','bolt'],
+ ['hvac','HVAC','Heating, cooling, and ventilation service for your building systems.','air'],
+ ['parking-lot-services','Parking Lot Services','Striping, pothole repair, resurfacing, and sweeping for your parking areas.','parking'],
+ ['tenant-improvement','Tenant Improvement','Interior and exterior painting and build-out support for tenant-ready spaces.','roller'],
+];
+
 export const business = Object.freeze({
   name: 'City Wide Facility Solutions – Southwest Los Angeles',
   shortName: 'City Wide Southwest Los Angeles',
   url: 'https://www.gocitywideswla.com',
   phone: '(562) 473-3136', telephone: '+15624733136',
   address: { streetAddress: '2750 N Bellflower Boulevard, Suite 206', addressLocality: 'Long Beach', addressRegion: 'CA', postalCode: '90815', addressCountry: 'US' },
+  services: serviceCatalogue.map(s => s[1]),
   contactRoute: '/request-walkthrough/',
   parent: { name: 'City Wide Facility Solutions', url: 'https://gocitywide.com/' },
   leadership: { name: 'Sam Lee', role: 'Owner & President', photo: '/assets/sam-lee.jpg', biography: 'Sam Lee launched City Wide of Southwest Los Angeles in early 2022. As a locally invested owner, Sam focuses on client retention, responsive service, and direct accountability, backed by the resources and systems of the City Wide network.', quote: 'We treat every building like it’s our own — with full responsibility, attention to detail, and decisions made in our clients’ best interest.' },
