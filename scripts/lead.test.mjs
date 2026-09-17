@@ -423,3 +423,27 @@ test("OpenAPI and server fields stay aligned; only one public action is describe
       );
   }
 });
+
+test("native walkthrough GET prefills only known services and preserves the API option value", async () => {
+  for (const [query, expected] of [
+    ["?service=commercial-cleaning", "Commercial Cleaning & Janitorial"],
+    ["?service=hvac", "HVAC"],
+    ["?service=unknown", null],
+    ["?service=%3Cscript%3E", null],
+    ["", null],
+  ]) {
+    const r = res();
+    await htmlHandler({ env: {} })(
+      req(null, { method: "GET", url: "/request-walkthrough/" + query }),
+      r,
+    );
+    assert.equal(r.statusCode, 200);
+    const selected =
+      r.body
+        .match(/<option value="([^"]+)" selected>/)?.[1]
+        ?.replaceAll("&amp;", "&") || null;
+    assert.equal(selected, expected);
+    assert.match(r.body, /Managed Janitorial Services \(commercial cleaning\)/);
+    assert.ok(!r.body.includes("<script>"));
+  }
+});

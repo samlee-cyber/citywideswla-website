@@ -1,5 +1,6 @@
 import { configured, acceptRequest } from "../lib/intake.mjs";
 import { productionReady } from "../lib/publication.mjs";
+import { serviceCatalogue } from "../content/business.mjs";
 import { fields } from "../lib/fields.mjs";
 import {
   commonHeaders,
@@ -22,6 +23,10 @@ export function createHandler({
     commonHeaders(res);
     if (req.method === "GET" || req.method === "HEAD") {
       const token = freshForm(req, res, env);
+      const interest = new URL(req.url, "https://local").searchParams.get(
+        "service",
+      );
+      const service = serviceCatalogue.find(([slug]) => slug === interest);
       if (
         new URL(req.url, "https://local").pathname ===
           "/request-walkthrough/" &&
@@ -33,7 +38,11 @@ export function createHandler({
         200,
         req.method === "HEAD"
           ? ""
-          : renderForm({ token, available: configured(env) }),
+          : renderForm({
+              token,
+              available: configured(env),
+              values: service ? { service_needed: service[1] } : {},
+            }),
       );
     }
     if (req.method !== "POST") {
