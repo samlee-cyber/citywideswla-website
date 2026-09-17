@@ -19,3 +19,5 @@ if(document.querySelector('.error-summary'))track('walkthrough_form_submit_error
 function trackReceipt(){const id=document.body.dataset.receipt;if(!id||window.cityWideAnalyticsConsent!==true)return;try{const key='cw-received-'+id;if(!sessionStorage.getItem(key)){track('walkthrough_form_submit_success');sessionStorage.setItem(key,'1');}}catch{/* No storage: avoid an undeduplicated conversion. */}}
 trackReceipt();window.addEventListener('citywide:analytics-consent',()=>{if(form)track('walkthrough_form_view');trackReceipt();});
 document.addEventListener('click',event=>{const a=event.target.closest('a');if(!a)return;if(a.getAttribute('href')?.startsWith('tel:'))track('phone_click');else if(a.getAttribute('href')?.startsWith('mailto:'))track('email_click');else if(a.dataset.event)track(a.dataset.event);});
+
+document.querySelector('.error-summary')?.focus();

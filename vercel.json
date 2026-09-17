@@ -1,8 +1,489 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
+  "functions": {
+    "api/**/*.mjs": {
+      "maxDuration": 30
+    }
+  },
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/contact",
+      "destination": "/request-walkthrough/",
+      "statusCode": 301
+    },
+    {
+      "source": "/contact/",
+      "destination": "/request-walkthrough/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services-we-manage",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services-we-manage/",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/areas-we-serve",
+      "destination": "/locations/",
+      "statusCode": 301
+    },
+    {
+      "source": "/areas-we-serve/",
+      "destination": "/locations/",
+      "statusCode": 301
+    },
+    {
+      "source": "/our-team",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/our-team/",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/index.html",
+      "destination": "/services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries",
+      "destination": "/industries/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/index.html",
+      "destination": "/industries/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations",
+      "destination": "/locations/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/index.html",
+      "destination": "/locations/",
+      "statusCode": 301
+    },
+    {
+      "source": "/case-studies",
+      "destination": "/case-studies/",
+      "statusCode": 301
+    },
+    {
+      "source": "/case-studies/index.html",
+      "destination": "/case-studies/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources",
+      "destination": "/resources/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/index.html",
+      "destination": "/resources/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/commercial-cleaning",
+      "destination": "/services/commercial-cleaning/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/commercial-cleaning/index.html",
+      "destination": "/services/commercial-cleaning/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/janitorial-consumables",
+      "destination": "/services/janitorial-consumables/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/janitorial-consumables/index.html",
+      "destination": "/services/janitorial-consumables/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/lawn-maintenance",
+      "destination": "/services/lawn-maintenance/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/lawn-maintenance/index.html",
+      "destination": "/services/lawn-maintenance/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/hard-floor-care",
+      "destination": "/services/hard-floor-care/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/hard-floor-care/index.html",
+      "destination": "/services/hard-floor-care/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/carpet-care",
+      "destination": "/services/carpet-care/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/carpet-care/index.html",
+      "destination": "/services/carpet-care/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/window-washing",
+      "destination": "/services/window-washing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/window-washing/index.html",
+      "destination": "/services/window-washing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/pressure-washing",
+      "destination": "/services/pressure-washing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/pressure-washing/index.html",
+      "destination": "/services/pressure-washing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/handyman-services",
+      "destination": "/services/handyman-services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/handyman-services/index.html",
+      "destination": "/services/handyman-services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/plumbing",
+      "destination": "/services/plumbing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/plumbing/index.html",
+      "destination": "/services/plumbing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/electrical",
+      "destination": "/services/electrical/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/electrical/index.html",
+      "destination": "/services/electrical/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/hvac",
+      "destination": "/services/hvac/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/hvac/index.html",
+      "destination": "/services/hvac/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/parking-lot-services",
+      "destination": "/services/parking-lot-services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/parking-lot-services/index.html",
+      "destination": "/services/parking-lot-services/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/tenant-improvement",
+      "destination": "/services/tenant-improvement/",
+      "statusCode": 301
+    },
+    {
+      "source": "/services/tenant-improvement/index.html",
+      "destination": "/services/tenant-improvement/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/logistics-distribution",
+      "destination": "/industries/logistics-distribution/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/logistics-distribution/index.html",
+      "destination": "/industries/logistics-distribution/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/commercial-office",
+      "destination": "/industries/commercial-office/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/commercial-office/index.html",
+      "destination": "/industries/commercial-office/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/healthcare-professional",
+      "destination": "/industries/healthcare-professional/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/healthcare-professional/index.html",
+      "destination": "/industries/healthcare-professional/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/education",
+      "destination": "/industries/education/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/education/index.html",
+      "destination": "/industries/education/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/automotive",
+      "destination": "/industries/automotive/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/automotive/index.html",
+      "destination": "/industries/automotive/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/industrial-manufacturing",
+      "destination": "/industries/industrial-manufacturing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/industrial-manufacturing/index.html",
+      "destination": "/industries/industrial-manufacturing/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/retail-commercial-property",
+      "destination": "/industries/retail-commercial-property/",
+      "statusCode": 301
+    },
+    {
+      "source": "/industries/retail-commercial-property/index.html",
+      "destination": "/industries/retail-commercial-property/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/long-beach",
+      "destination": "/locations/long-beach/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/long-beach/index.html",
+      "destination": "/locations/long-beach/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/torrance",
+      "destination": "/locations/torrance/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/torrance/index.html",
+      "destination": "/locations/torrance/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/carson",
+      "destination": "/locations/carson/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/carson/index.html",
+      "destination": "/locations/carson/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/el-segundo",
+      "destination": "/locations/el-segundo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/el-segundo/index.html",
+      "destination": "/locations/el-segundo/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/culver-city",
+      "destination": "/locations/culver-city/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/culver-city/index.html",
+      "destination": "/locations/culver-city/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/inglewood",
+      "destination": "/locations/inglewood/",
+      "statusCode": 301
+    },
+    {
+      "source": "/locations/inglewood/index.html",
+      "destination": "/locations/inglewood/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/commercial-cleaning-rfp-checklist",
+      "destination": "/resources/commercial-cleaning-rfp-checklist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/commercial-cleaning-rfp-checklist/index.html",
+      "destination": "/resources/commercial-cleaning-rfp-checklist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/janitorial-scope-of-work-guide",
+      "destination": "/resources/janitorial-scope-of-work-guide/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/janitorial-scope-of-work-guide/index.html",
+      "destination": "/resources/janitorial-scope-of-work-guide/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/warehouse-cleaning-checklist",
+      "destination": "/resources/warehouse-cleaning-checklist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/warehouse-cleaning-checklist/index.html",
+      "destination": "/resources/warehouse-cleaning-checklist/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/day-porter-vs-night-cleaning",
+      "destination": "/resources/day-porter-vs-night-cleaning/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/day-porter-vs-night-cleaning/index.html",
+      "destination": "/resources/day-porter-vs-night-cleaning/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/commercial-cleaning-pricing-factors",
+      "destination": "/resources/commercial-cleaning-pricing-factors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/commercial-cleaning-pricing-factors/index.html",
+      "destination": "/resources/commercial-cleaning-pricing-factors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/transitioning-janitorial-providers",
+      "destination": "/resources/transitioning-janitorial-providers/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/transitioning-janitorial-providers/index.html",
+      "destination": "/resources/transitioning-janitorial-providers/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/consolidating-facility-vendors",
+      "destination": "/resources/consolidating-facility-vendors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/resources/consolidating-facility-vendors/index.html",
+      "destination": "/resources/consolidating-facility-vendors/",
+      "statusCode": 301
+    },
+    {
+      "source": "/about",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/about/index.html",
+      "destination": "/about/",
+      "statusCode": 301
+    },
+    {
+      "source": "/request-walkthrough",
+      "destination": "/request-walkthrough/",
+      "statusCode": 301
+    },
+    {
+      "source": "/request-walkthrough/index.html",
+      "destination": "/request-walkthrough/",
+      "statusCode": 301
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/privacy/index.html",
+      "destination": "/privacy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/request-received",
+      "destination": "/request-received/",
+      "statusCode": 301
+    },
+    {
+      "source": "/request-received/index.html",
+      "destination": "/request-received/",
+      "statusCode": 301
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/request-walkthrough/",
+      "destination": "/api/walkthrough"
+    },
+    {
+      "source": "/request-received/",
+      "destination": "/api/receipt"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -22,6 +503,32 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/request-received/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
     }
