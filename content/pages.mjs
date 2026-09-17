@@ -1,6 +1,7 @@
 import { business, serviceCatalogue } from "./business.mjs";
 const supplied = [
   "Owner implementation brief and service proposal, 2026-09-16",
+  "Owner-supplied City Wide SWLA Management First Website Messaging, 2026-09-16",
 ];
 export { serviceCatalogue } from "./business.mjs";
 export const industryCatalogue = [
@@ -135,28 +136,29 @@ export const pages = [
     page(
       "/",
       "home",
-      "Commercial Cleaning & Facility Services in Southwest Los Angeles",
-      "One local partner managing commercial cleaning and facility services across Southwest Los Angeles. Request a facility walkthrough.",
+      "Commercial Facility Management",
+      "City Wide manages commercial building maintenance in Southwest Los Angeles, including managed janitorial programs and a broad range of facility services.",
       {
-        h1: "Commercial Cleaning & Facility Services in Southwest Los Angeles.",
+        h1: "Commercial Building Maintenance. Managed for You.",
+        title: "Commercial Facility Management | City Wide Southwest LA",
       },
     ),
   ),
   ...[
     [
       "services",
-      "Services",
-      "Facility services managed through one local point of contact. Explore commercial cleaning, building maintenance, and special projects.",
+      "Managed Services",
+      "Coordinate your building maintenance through one local management partner. City Wide helps define the scope, coordinate providers and oversee agreed services, from recurring janitorial to repairs and improvement projects.",
     ],
     [
       "industries",
       "Industries",
-      "Find facility service planning for logistics, offices, healthcare, education, automotive, industrial, and retail environments.",
+      "Your building’s use, operating hours and access requirements shape the program. We coordinate services around the needs of offices, logistics facilities, schools, healthcare and professional spaces, automotive businesses, industrial facilities and commercial properties.",
     ],
     [
       "locations",
       "Locations",
-      "City Wide serves businesses across Southwest Los Angeles from our Long Beach office. Explore our initial local service areas.",
+      "Based in Long Beach, our local team manages commercial facility services across Southwest Los Angeles.",
     ],
     [
       "case-studies",
@@ -174,6 +176,8 @@ export const pages = [
   ...serviceCatalogue.map(([slug, label, summary, icon]) =>
     page(`/services/${slug}/`, "service", label, summary, {
       summary,
+      label:
+        slug === "commercial-cleaning" ? "Managed Janitorial Services" : label,
       icon,
       h1: `${label} in Southwest Los Angeles`,
       relationships: [
@@ -202,10 +206,10 @@ export const pages = [
       `/locations/${city.toLowerCase().replaceAll(" ", "-")}/`,
       "location",
       city,
-      `Commercial cleaning and facility services in ${city}. Discuss your property with City Wide Southwest Los Angeles.`,
+      `City Wide helps businesses in ${city} manage commercial building maintenance through one local point of contact. Explore managed janitorial programs and a broad range of facility services coordinated around your property’s needs.`,
       {
         city,
-        h1: `Commercial Cleaning & Facility Services in ${city}`,
+        h1: `Commercial Building Maintenance Management in ${city}.`,
         relationships: [
           "/services/commercial-cleaning/",
           "/services/",
@@ -230,7 +234,7 @@ export const pages = [
       "/about/",
       "about",
       "About City Wide Southwest Los Angeles",
-      "Meet owner Sam Lee and the local City Wide team. One point of contact for commercial cleaning and facility services, based in Long Beach.",
+      "City Wide Facility Solutions Southwest Los Angeles is a locally owned management company in the commercial building maintenance industry. Led by Sam Lee, our team helps businesses coordinate facility services, oversee service quality and resolve issues through one accountable relationship.",
       {
         label: "About",
         navOrder: 6,
@@ -243,9 +247,9 @@ export const pages = [
       "/request-walkthrough/",
       "action",
       "Request a Walkthrough",
-      "Tell City Wide Southwest Los Angeles about your facility and service priorities. Request a commercial cleaning or facility services walkthrough.",
+      "Tell us about your building, current service challenges and priorities. Whether you’re evaluating a managed janitorial program or need another facility service, our local team will help define the next step.",
       {
-        h1: "Request a Commercial Cleaning or Facility Services Walkthrough.",
+        h1: "Request a Facility Walkthrough.",
         navOrder: 7,
       },
     ),
@@ -305,38 +309,53 @@ Object.assign(cleaning, ready(cleaning), {
       "https://gocitywide.com/southwestlosangeles/why-city-wide/",
     ],
   },
+  title: "Managed Janitorial Services | City Wide Southwest LA",
+  h1: "Commercial Janitorial Services, Backed by a Facility Management Team.",
+  description:
+    "Get commercial janitorial services with a fractional facility manager, a management team and a program built around your facility and budget.",
   summary:
-    "City Wide Southwest Los Angeles manages commercial cleaning for business facilities, with a local Facility Solutions Manager coordinating the scope, service providers, communication, and quality follow-up. Request a walkthrough to discuss your spaces and priorities.",
+    "City Wide manages commercial cleaning and janitorial programs throughout Southwest Los Angeles. Your managed janitorial services contract includes a fractional facility manager, a supporting management team and a facility management program to coordinate service, oversee quality and follow through on issues.",
   content: [
     {
-      heading: "Service scope",
+      heading: "More support. Less day-to-day coordination.",
       paragraphs: [
-        "Build a scope around the areas your team uses and the attention each space needs. The walkthrough is where we discuss tasks, frequencies, access, and expectations.",
+        "We tailor the scope and schedule to your building and budget, giving you a competitively priced program and less day-to-day coordination to handle yourself.",
+        "Your Facility Solutions Manager acts as an extension of your team, coordinating the contracted facility services and helping address maintenance needs. The role provides ongoing management support; it is not a full-time onsite employee.",
+      ],
+    },
+    {
+      heading: "What your managed janitorial contract includes",
+      items: [
+        "Your manager — One local contact who knows your facility and coordinates your service needs.",
+        "Your team — Management support for provider coordination, communication and issue resolution.",
+        "Your program — An agreed scope, service schedule and quality follow-up process built around your priorities.",
+      ],
+      paragraphs: [
+        "Along with the agreed janitorial services, you receive a fractional facility manager, a supporting management team and a facility management program. Additional facility services are scoped and priced separately.",
+      ],
+    },
+    {
+      heading: "Cleaning scope and schedule",
+      paragraphs: [
+        "Build a scope around the areas your team uses and the attention each space needs. During the walkthrough, we discuss tasks, frequencies, traffic, access and expectations, then agree on a schedule around your operating requirements.",
       ],
       items: [
-        "Recurring janitorial: dusting, vacuuming, trash removal, and restroom cleaning.",
-        "Day porter support for shared spaces, spills, and supplies during business hours.",
+        "Recurring janitorial: dusting, vacuuming, trash removal and restroom cleaning.",
+        "Day porter support for shared spaces, spills and supplies during business hours, where included in the agreed scope.",
         "Breakroom and common-area cleaning, with floor maintenance coordinated as needed.",
+        "Planning for office common areas, logistics support spaces, schools, professional facilities and automotive showrooms.",
       ],
     },
     {
-      heading: "Common facility needs and types",
+      heading: "Quality oversight and issue resolution",
       paragraphs: [
-        "Office common areas, logistics support spaces, schools, professional facilities, and automotive showrooms have different traffic patterns. Tell us where cleaning affects your day, which spaces need special attention, and which areas are outside the proposed scope.",
+        "Your Facility Solutions Manager coordinates service providers, oversees quality and follows through on issues. Bring service concerns to your local contact so the team can review them against the agreed scope and coordinate the next steps.",
       ],
     },
     {
-      heading: "How City Wide manages delivery",
+      heading: "Related facility services",
       paragraphs: [
-        "Your Facility Solutions Manager represents your priorities, coordinates service providers, and oversees quality control. You have one local contact for service communication and follow-up.",
-      ],
-    },
-    {
-      heading: "The walkthrough process",
-      items: [
-        "Discuss your facility, current concerns, and service priorities.",
-        "Review access, spaces, and the proposed work during a walkthrough when appropriate.",
-        "Develop a tailored scope and proposal, including the agreed tasks and schedule.",
+        "From floor care and supplies to plumbing, HVAC and improvement projects, your City Wide contact can help define the scope and coordinate additional work as needs arise. These services and projects are scoped and priced separately from your janitorial program.",
       ],
     },
   ],
@@ -349,6 +368,13 @@ Object.assign(cleaning, ready(cleaning), {
     "/case-studies/",
   ],
 });
+const hubHeadings = {
+  "/services/": "Managed Facility Services for Commercial Buildings.",
+  "/industries/": "Facility Management Built Around Your Operation.",
+  "/case-studies/": "Facility Problems. Managed Solutions.",
+  "/resources/": "Practical Guidance for Managing Your Facility.",
+};
+for (const p of pages) if (hubHeadings[p.slug]) p.h1 = hubHeadings[p.slug];
 export const navigation = (registry = pages) =>
   registry.filter((p) => p.navOrder).sort((a, b) => a.navOrder - b.navOrder);
 export const findPage = (slug) => pages.find((p) => p.slug === slug);

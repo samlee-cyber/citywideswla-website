@@ -40,17 +40,28 @@ for (const p of pages) {
     assert.ok(!descriptions.has(p.description), "duplicate description");
     descriptions.add(p.description);
   }
-  for (const [, url] of html.matchAll(/(?:href|src)="(\/[^"?]*|#[^"]*)"/g)) {
+  for (const [, url] of html.matchAll(/(?:href|src)="(\/[^"]*|#[^"]*)"/g)) {
     if (url.startsWith("#")) {
       assert.ok(ids.includes(url.slice(1)), `Missing anchor ${p.slug}${url}`);
       continue;
     }
     linkCount++;
-    if (pages.some((x) => x.slug === url)) {
-      linked.add(url);
+    const target = new URL(url.replaceAll("&amp;", "&"), business.url);
+    if (target.hash) {
+      const targetHtml = await readFile(
+        "dist" + target.pathname + "index.html",
+        "utf8",
+      );
+      assert.ok(
+        targetHtml.includes(`id="${target.hash.slice(1)}"`),
+        `Missing anchor ${url}`,
+      );
+    }
+    if (pages.some((x) => x.slug === target.pathname)) {
+      linked.add(target.pathname);
       continue;
     }
-    await access("dist" + url);
+    await access("dist" + target.pathname);
   }
   assert.ok(
     !/\$4M|\brevenue\b|branch.sales|sales.growth|annual.sales|sales.volume/i.test(

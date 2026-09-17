@@ -2,7 +2,7 @@ export const serviceCatalogue = [
   [
     "commercial-cleaning",
     "Commercial Cleaning & Janitorial",
-    "Recurring cleaning, day porter support, and coordinated care for the spaces people use every day.",
+    "Commercial cleaning supported by a fractional facility manager, a management team and an ongoing service program.",
     "clean",
   ],
   [
@@ -81,6 +81,8 @@ export const serviceCatalogue = [
 
 export const business = Object.freeze({
   name: "City Wide Facility Solutions – Southwest Los Angeles",
+  description:
+    "City Wide Facility Solutions Southwest Los Angeles is a management company in the commercial building maintenance industry, coordinating janitorial and other facility services through one local management relationship.",
   shortName: "City Wide Southwest Los Angeles",
   url: "https://www.gocitywideswla.com",
   phone: "(562) 473-3136",
