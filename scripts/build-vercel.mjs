@@ -5,7 +5,12 @@ import { build } from "./build.mjs";
 import { pages } from "../content/pages.mjs";
 
 export async function buildVercel(options = {}) {
-  await build(options);
+  // This project uses Vercel Authentication for every preview deployment.
+  // Keep protection enabled: noindex is not access control.
+  await build({
+    ownerPreview: process.env.VERCEL_ENV === "preview",
+    ...options,
+  });
   const out = resolve(options.out || "dist");
   // Vercel serves existing files before rewrites. These routes must reach the
   // native form/receipt functions for query values, cookies and signed receipts.

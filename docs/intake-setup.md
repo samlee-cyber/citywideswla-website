@@ -15,7 +15,7 @@ Configure these server-only environment variables in Vercel, separately for prev
 | UPSTASH_REDIS_REST_TOKEN | Server write credential for that database |
 | INTAKE_SIGNING_KEY | Random secret, at least 32 characters, for signed cookies and keyed fingerprints |
 
-Keep credentials out of code, chat, screenshots, public logs and browser JavaScript. No sample credential enables production. With configuration absent, the site explicitly offers the phone number and valid submissions return 503. No mock-success path is shipped.
+Keep credentials out of code, chat, screenshots, public logs and browser JavaScript. No sample credential enables production. With configuration absent, the site renders only a call-first message and the phone number, without editable fields or a submit button. Older/native POSTs and JSON submissions fail closed with 503; older entered values are preserved as escaped read-only details. No mock-success path is shipped.
 
 Redis must have persistence enabled and key eviction disabled; use a dedicated database. It stores only keyed IP/content/request fingerprints and receipt metadata, not the form's contact text. IP throttles expire after 15 minutes; duplicate records after 24 hours. The actual form details are sent to Resend and the destination inbox. Confirm their retention/access policy with the owner and update the privacy notice if providers change. Do not rotate the signing key mid-retry window without coordinating duplicate prevention and cookie invalidation.
 

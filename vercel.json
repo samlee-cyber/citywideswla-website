@@ -472,6 +472,16 @@
       "source": "/request-received/index.html",
       "destination": "/request-received/",
       "statusCode": 301
+    },
+    {
+      "source": "/integrations",
+      "destination": "/integrations/",
+      "statusCode": 301
+    },
+    {
+      "source": "/integrations/index.html",
+      "destination": "/integrations/",
+      "statusCode": 301
     }
   ],
   "rewrites": [

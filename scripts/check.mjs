@@ -24,7 +24,7 @@ for (const p of pages) {
   );
   assert.equal(
     html.includes('content="index, follow"'),
-    isIndexable(p, productionReady()),
+    isIndexable(p, productionReady(), pages),
     p.slug + " indexing",
   );
   for (const [, data] of html.matchAll(
@@ -34,7 +34,7 @@ for (const p of pages) {
     assert.ok(graph.length);
     assert.ok(!JSON.stringify(graph).match(/AggregateRating|"Review"/));
   }
-  if (isIndexable(p, true)) {
+  if (isIndexable(p, true, pages)) {
     assert.ok(!titles.has(p.title), "duplicate title");
     titles.add(p.title);
     assert.ok(!descriptions.has(p.description), "duplicate description");
@@ -61,7 +61,9 @@ for (const p of pages) {
       linked.add(target.pathname);
       continue;
     }
-    await access("dist" + target.pathname);
+    if (target.pathname === "/api/form-config")
+      await access("api/form-config.mjs");
+    else await access("dist" + target.pathname);
   }
   assert.ok(
     !/\$4M|\brevenue\b|branch.sales|sales.growth|annual.sales|sales.volume/i.test(
@@ -77,13 +79,13 @@ for (const p of pages) {
       "Image semantics",
     );
 }
-for (const p of pages.filter((p) => isIndexable(p, true)))
+for (const p of pages.filter((p) => isIndexable(p, true, pages)))
   assert.ok(linked.has(p.slug), "orphan " + p.slug);
 const map = await readFile("dist/sitemap.xml", "utf8");
 for (const p of pages)
   assert.equal(
     map.includes(business.url + p.slug + "</loc>"),
-    isIndexable(p, productionReady()),
+    isIndexable(p, productionReady(), pages),
     p.slug + " sitemap",
   );
 async function syntax(dir) {

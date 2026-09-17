@@ -8,11 +8,16 @@ import { business } from "../content/business.mjs";
 import { customers, approvedCustomers } from "../content/customers.mjs";
 import { build } from "./build.mjs";
 import { renderPage, schema } from "../lib/render.mjs";
-import { isPublished, validateRegistry } from "../lib/publication.mjs";
+import {
+  isPublished,
+  validateRegistry,
+  publicDestination,
+  sitemap,
+} from "../lib/publication.mjs";
 test("construction → published → construction updates initial HTML, sitemap, schema and related lists in real builds", async () => {
   const dir = await mkdtemp(join(tmpdir(), "cw-lifecycle-"));
   const registry = structuredClone(pages);
-  const p = registry.find((p) => p.slug === "/services/hard-floor-care/");
+  const p = registry.find((p) => p.slug === "/services/carpet-care/");
   const cleaning = registry.find(
     (p) => p.slug === "/services/commercial-cleaning/",
   );
@@ -134,4 +139,70 @@ test("case study and article templates are real templates; no fictional projects
     () => validateRegistry([...pages, fixture]),
     /verified results/,
   );
+});
+
+test("empty hubs follow approved child publication and reversal", () => {
+  const registry = structuredClone(pages);
+  const hub = registry.find((p) => p.slug === "/resources/");
+  const child = registry.find((p) => p.type === "resource");
+  const check = (expected) => {
+    assert.equal(isPublished(hub, registry), expected);
+    assert.equal(
+      sitemap(registry).includes(business.url + hub.slug + "</loc>"),
+      expected,
+    );
+    assert.equal(
+      renderPage(hub, { registry, production: true }).includes(
+        'content="index, follow"',
+      ),
+      expected,
+    );
+    const home = renderPage(registry[0], { registry, production: true });
+    assert.equal(home.includes('href="/resources/"'), expected);
+  };
+  check(false);
+  Object.assign(child, {
+    status: "published",
+    approval: { facts: true, content: true, evidence: ["Test fixture only"] },
+    content: [{ heading: "Useful guide", paragraphs: ["Fixture only"] }],
+    author: "Test author",
+    publishedAt: "2026-09-16",
+    updatedAt: "2026-09-16",
+  });
+  check(true);
+  child.status = "construction";
+  check(false);
+  const service = registry.find((p) => p.slug === "/services/carpet-care/");
+  assert.equal(
+    publicDestination(service, registry),
+    "/request-walkthrough/?service=carpet-care",
+  );
+  service.status = "published";
+  service.approval = { facts: true, content: true, evidence: ["Test"] };
+  assert.equal(publicDestination(service, registry), service.slug);
+});
+test("owner architecture index is opt-in and cannot enter production", async () => {
+  const out = await mkdtemp(join(tmpdir(), "cw-owner-preview-"));
+  try {
+    await build({ out, production: false, ownerPreview: true });
+    const html = await readFile(join(out, "owner-preview/index.html"), "utf8");
+    for (const p of pages) assert.ok(html.includes(p.slug));
+    assert.match(html, /noindex,nofollow/);
+    assert.ok(
+      !(await readFile(join(out, "sitemap.xml"), "utf8")).includes(
+        "owner-preview",
+      ),
+    );
+    await assert.rejects(
+      build({ out, production: true, ownerPreview: true }),
+      /cannot/,
+    );
+    await build({ out, production: true, ownerPreview: false });
+    await assert.rejects(
+      readFile(join(out, "owner-preview/index.html")),
+      /ENOENT/,
+    );
+  } finally {
+    await rm(out, { recursive: true, force: true });
+  }
 });

@@ -8,14 +8,20 @@ import {
   validateRegistry,
   sitemap,
   productionReady,
+  isPublished,
 } from "../lib/publication.mjs";
 import { renderForm, renderReceipt } from "../lib/form.mjs";
-import { renderPage, notFound } from "../lib/render.mjs";
+import { renderPage, notFound, escape } from "../lib/render.mjs";
 export async function build({
   registry = pages,
   out = "dist",
   production = productionReady(),
+  ownerPreview = process.env.OWNER_PREVIEW === "1",
 } = {}) {
+  if (ownerPreview && (production || process.env.VERCEL_ENV === "production"))
+    throw new Error(
+      "Owner preview cannot be included in a production deployment",
+    );
   validateRegistry(registry);
   // Only remove the build output chosen by this command, never the project root.
   const dest = resolve(out);
@@ -34,6 +40,13 @@ export async function build({
         : page.type === "utility"
           ? renderReceipt(null, { production })
           : renderPage(page, { registry, production }),
+    );
+  }
+  if (ownerPreview) {
+    await mkdir(resolve(dest, "owner-preview"), { recursive: true });
+    await writeFile(
+      resolve(dest, "owner-preview/index.html"),
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>City Wide owner review</title><link rel="stylesheet" href="/styles.css"></head><body><main class="container section"><h1>Owner review</h1><p>Complete route architecture for editorial review. Drafts are not customer-ready. This index must remain on localhost or an authenticated preview deployment.</p><ul>${registry.map((p) => `<li><a href="${escape(p.slug)}">${escape(p.label || p.title)}</a> — ${isPublished(p, registry) ? "Published content" : "Draft / unavailable"} <small>${escape(p.slug)}</small></li>`).join("")}</ul></main></body></html>`,
     );
   }
   await writeFile(resolve(dest, "404.html"), notFound());

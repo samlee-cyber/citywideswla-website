@@ -1,5 +1,7 @@
 import { configured, acceptRequest } from "../lib/intake.mjs";
 import { productionReady } from "../lib/publication.mjs";
+import { industryCatalogue } from "../content/pages.mjs";
+import { business } from "../content/business.mjs";
 import { serviceCatalogue } from "../content/business.mjs";
 import { fields } from "../lib/fields.mjs";
 import {
@@ -27,6 +29,11 @@ export function createHandler({
         "service",
       );
       const service = serviceCatalogue.find(([slug]) => slug === interest);
+      const params = new URL(req.url, "https://local").searchParams;
+      const city = business.areas.find((city) => city === params.get("city"));
+      const industry = industryCatalogue.find(
+        ([slug]) => slug === params.get("industry"),
+      );
       if (
         new URL(req.url, "https://local").pathname ===
           "/request-walkthrough/" &&
@@ -41,7 +48,12 @@ export function createHandler({
           : renderForm({
               token,
               available: configured(env),
-              values: service ? { service_needed: service[1] } : {},
+              values: {
+                ...(service ? { service_needed: service[1] } : {}),
+                ...(city ? { facility_city: city } : {}),
+                ...(industry ? { facility_type: industry[1] } : {}),
+              },
+              production: productionReady(env),
             }),
       );
     }
@@ -112,6 +124,7 @@ export function createHandler({
           token,
           available: configured(env),
           code: err.status,
+          production: productionReady(env),
         }),
       );
     }

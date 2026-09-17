@@ -33,7 +33,23 @@ document.querySelectorAll("[data-case-filter]").forEach((button) =>
       : "No approved case studies in this category yet.";
   }),
 );
-// Analytics adapter: no vendor is installed. Explicit consent is required.
+// Platform-neutral analytics adapter. Explicit consent is required.
+// Configure cityWideAnalyticsSend in the approved measurement integration.
+const allowedServices = new Set([
+  "commercial-cleaning",
+  "janitorial-consumables",
+  "lawn-maintenance",
+  "hard-floor-care",
+  "carpet-care",
+  "window-washing",
+  "pressure-washing",
+  "handyman-services",
+  "plumbing",
+  "electrical",
+  "hvac",
+  "parking-lot-services",
+  "tenant-improvement",
+]);
 const allowedEvents = new Set([
   "walkthrough_form_view",
   "walkthrough_form_start",
@@ -44,11 +60,20 @@ const allowedEvents = new Set([
   "service_cta_click",
   "case_study_cta_click",
 ]);
-function track(event) {
+function track(event, service) {
   if (!allowedEvents.has(event) || window.cityWideAnalyticsConsent !== true)
     return;
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event, page_path: document.body.dataset.page });
+  const payload = { event, page_path: document.body.dataset.page };
+  if (allowedServices.has(service)) payload.service_interest = service;
+  window.dataLayer.push(payload);
+  if (typeof window.cityWideAnalyticsSend === "function") {
+    try {
+      window.cityWideAnalyticsSend({ ...payload });
+    } catch {
+      /* Measurement must never interrupt an inquiry. */
+    }
+  }
 }
 const form = document.querySelector("#walkthrough-form");
 if (form) {
@@ -82,7 +107,13 @@ document.addEventListener("click", (event) => {
   if (!a) return;
   if (a.getAttribute("href")?.startsWith("tel:")) track("phone_click");
   else if (a.getAttribute("href")?.startsWith("mailto:")) track("email_click");
-  else if (a.dataset.event) track(a.dataset.event);
+  else if (a.dataset.event) {
+    const href = a.getAttribute("href") || "";
+    const service =
+      href.match(/^\/services\/([a-z-]+)\//)?.[1] ||
+      href.match(/[?&]service=([a-z-]+)(?:&|$)/)?.[1];
+    track(a.dataset.event, service);
+  }
 });
 
 document.querySelector(".error-summary")?.focus();

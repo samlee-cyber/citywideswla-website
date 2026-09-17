@@ -1,7 +1,9 @@
+import { isPublished } from "../lib/publication.mjs";
 import { business, serviceCatalogue } from "./business.mjs";
 const supplied = [
   "Owner implementation brief and service proposal, 2026-09-16",
   "Owner-supplied City Wide SWLA Management First Website Messaging, 2026-09-16",
+  "Owner-supplied City Wide SWLA Website Refinement Brief, 2026-09-16",
 ];
 export { serviceCatalogue } from "./business.mjs";
 export const industryCatalogue = [
@@ -171,7 +173,16 @@ export const pages = [
       "Explore planned commercial cleaning checklists and facility management guides from City Wide Southwest Los Angeles.",
     ],
   ].map(([slug, label, description], i) =>
-    ready(page(`/${slug}/`, "hub", label, description, { navOrder: i + 1 })),
+    ready(
+      page(`/${slug}/`, "hub", label, description, {
+        navOrder: i + 1,
+        ...(slug === "case-studies"
+          ? { collectionType: "case-study" }
+          : slug === "resources"
+            ? { collectionType: "resource" }
+            : {}),
+      }),
+    ),
   ),
   ...serviceCatalogue.map(([slug, label, summary, icon]) =>
     page(`/services/${slug}/`, "service", label, summary, {
@@ -247,7 +258,7 @@ export const pages = [
       "/request-walkthrough/",
       "action",
       "Request a Walkthrough",
-      "Tell us about your building, current service challenges and priorities. Whether you’re evaluating a managed janitorial program or need another facility service, our local team will help define the next step.",
+      "Tell us about your facility and the services you need. Our local team will review your priorities and discuss the next step; a request does not book an appointment.",
       {
         h1: "Request a Facility Walkthrough.",
         navOrder: 7,
@@ -368,6 +379,132 @@ Object.assign(cleaning, ready(cleaning), {
     "/case-studies/",
   ],
 });
+// Scope and planning guidance derived from the owner’s approved service catalogue
+// and management brief; no customer results, certifications or response promises.
+const floorCare = pages.find((p) => p.slug === "/services/hard-floor-care/");
+Object.assign(floorCare, ready(floorCare), {
+  summary:
+    "City Wide coordinates hard floor care for commercial buildings, including stripping, refinishing and protecting resilient tile and other hard-surface floors. We start with the floor type, its condition and how the space is used, then agree on a scope and schedule.",
+  content: [
+    {
+      heading: "Start with the floor and the work it needs",
+      paragraphs: [
+        "A walkthrough helps define which surfaces and areas need attention. Tell us about worn finishes, tracked-in soil, high-traffic areas and any requirements provided by the flooring manufacturer. The proposed treatment should suit the surface and its condition.",
+      ],
+      items: [
+        "Identify the flooring material and areas to be included.",
+        "Review the existing finish, wear and desired result.",
+        "Agree on the preparation, treatment and service frequency before work begins.",
+      ],
+    },
+    {
+      heading: "Coordinate access and timing",
+      paragraphs: [
+        "Floor work affects how people move through a building. We discuss operating hours, access, furniture, and when treated areas can be used again. Any drying or curing requirements belong in the agreed work plan; they vary with the surface and treatment.",
+      ],
+    },
+    {
+      heading: "One contact for the project",
+      paragraphs: [
+        "City Wide helps define the scope, coordinate the service provider and follow up on the agreed work. Raise questions or quality concerns with your local contact so the team can review them and coordinate the next steps.",
+        "You can request floor care independently. It does not require a managed janitorial contract, and additional services are scoped and priced separately.",
+      ],
+    },
+    {
+      heading: "What to share when you inquire",
+      items: [
+        "Facility city, approximate floor area and known flooring material.",
+        "Current concerns, access restrictions and preferred timing.",
+        "Whether you need a one-time project or want to discuss recurring care.",
+      ],
+      paragraphs: [
+        "A proposal reflects the actual areas, condition, work and schedule. Contact our local team to discuss your building.",
+      ],
+    },
+  ],
+});
+const office = pages.find((p) => p.slug === "/industries/commercial-office/");
+Object.assign(office, ready(office), {
+  summary:
+    "Coordinate cleaning and building maintenance around your office’s people, shared spaces and operating hours. City Wide Southwest Los Angeles provides one local management relationship for the agreed services and additional projects.",
+  content: [
+    {
+      heading: "Plan around how your office works",
+      paragraphs: [
+        "Reception areas, meeting rooms, restrooms and breakrooms have different traffic and service needs. We review those spaces with you, along with access arrangements, business hours and areas that are outside the scope.",
+      ],
+      items: [
+        "Identify shared areas and the attention each needs.",
+        "Agree on service timing, building access and a point of contact.",
+        "Discuss current issues and priorities for the proposed program.",
+      ],
+    },
+    {
+      heading: "Managed janitorial for everyday needs",
+      paragraphs: [
+        "A managed janitorial services contract includes the agreed cleaning scope, a fractional facility manager, a supporting management team and a facility management program. Your manager coordinates providers, oversees quality and follows through on service issues as an extension of your team; the role is not a full-time onsite employee.",
+      ],
+    },
+    {
+      heading: "Coordinate other building needs",
+      paragraphs: [
+        "Hard floor and carpet care, window washing, consumable supplies and repair projects can be discussed through the same local contact. Additional work is separately scoped and priced. You may also inquire about these services independently, without a janitorial contract.",
+      ],
+    },
+    {
+      heading: "Build a practical scope and proposal",
+      paragraphs: [
+        "Tell us your facility’s city, approximate size, hours and immediate concerns. A walkthrough helps align tasks and frequency with your building and budget. Competitive pricing with management built into the program applies to managed janitorial; the scope and price of other projects are agreed separately.",
+      ],
+    },
+  ],
+});
+pages.push(
+  ready(
+    page(
+      "/integrations/",
+      "page",
+      "Walkthrough Inquiry API",
+      "Integration instructions and the public request contract for City Wide Southwest Los Angeles facility inquiries.",
+      {
+        h1: "Facility inquiry integration guide.",
+        content: [
+          {
+            heading: "Availability and appropriate use",
+            paragraphs: [
+              "This public endpoint is for facility inquiries submitted with the prospective customer’s authorization. Online handoff is not connected yet; use the office phone number until delivery has been configured and verified. The form-config endpoint reports configuration presence, not a successful delivery test.",
+            ],
+          },
+          {
+            heading: "Submit an inquiry",
+            paragraphs: [
+              "POST JSON to /api/v1/walkthrough-request using Content-Type: application/json and an Idempotency-Key of 16–128 letters, digits, hyphens or underscores. Supply contact_name, work_email, company, facility_city and service_needed. All values are strings. Use the service enum in the linked specification; the janitorial value remains Commercial Cleaning & Janitorial for compatibility.",
+            ],
+          },
+          {
+            heading: "Understand the response",
+            paragraphs: [
+              "A 201 response means the configured intake provider acknowledged the handoff and returns a request reference. It does not book an appointment. A 422 response contains field errors; 409 indicates a key reused with different details. Missing configuration returns 503, never a simulated receipt.",
+            ],
+          },
+          {
+            heading: "Retry safely",
+            paragraphs: [
+              "Keep the same key and unchanged fields when retrying a transient 429, 502 or 503 response. Follow Retry-After where returned. The public endpoint accepts a maximum 16 KB body and limits each source IP to 10 attempts per 15 minutes. Browser origins must match the configured website; arbitrary browser CORS access is not enabled. Do not include confidential information.",
+            ],
+          },
+          {
+            heading: "Delivery verification",
+            paragraphs: [
+              "The automated contract and retry checks use test providers. Real inbox receipt, duplicate delivery prevention with the live store and analytics conversion delivery still require a configured staging destination and an approved labeled test. No production or agent-readiness certification is implied.",
+            ],
+          },
+        ],
+        relationships: ["/request-walkthrough/", "/privacy/"],
+      },
+    ),
+  ),
+);
 const hubHeadings = {
   "/services/": "Managed Facility Services for Commercial Buildings.",
   "/industries/": "Facility Management Built Around Your Operation.",
@@ -376,5 +513,7 @@ const hubHeadings = {
 };
 for (const p of pages) if (hubHeadings[p.slug]) p.h1 = hubHeadings[p.slug];
 export const navigation = (registry = pages) =>
-  registry.filter((p) => p.navOrder).sort((a, b) => a.navOrder - b.navOrder);
+  registry
+    .filter((p) => p.navOrder && isPublished(p, registry))
+    .sort((a, b) => a.navOrder - b.navOrder);
 export const findPage = (slug) => pages.find((p) => p.slug === slug);
