@@ -1,3 +1,4 @@
+import { pages } from "../content/pages.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, access, rm } from "node:fs/promises";
@@ -24,7 +25,7 @@ test("Vercel output cannot shadow the form and receipt functions; published page
     const home = await readFile(join(out, "index.html"), "utf8");
     assert.match(home, /content="index, follow"/);
     const construction = await readFile(
-      join(out, "services/hard-floor-care/index.html"),
+      join(out, "services/carpet-care/index.html"),
       "utf8",
     );
     assert.match(construction, /content="noindex, nofollow"/);
@@ -33,5 +34,16 @@ test("Vercel output cannot shadow the form and receipt functions; published page
     assert.ok(!map.includes("/request-received/</loc>"));
   } finally {
     await rm(out, { recursive: true, force: true });
+  }
+});
+
+test("every registry route has direct permanent canonical redirects", async () => {
+  const config = JSON.parse(await readFile("vercel.json", "utf8"));
+  for (const p of pages.filter((p) => p.slug !== "/")) {
+    for (const source of [p.slug.slice(0, -1), p.slug + "index.html"]) {
+      const rule = config.redirects.find((r) => r.source === source);
+      assert.equal(rule?.destination, p.slug);
+      assert.equal(rule?.statusCode, 301);
+    }
   }
 });

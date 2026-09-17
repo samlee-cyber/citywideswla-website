@@ -4,7 +4,7 @@ Canonical: https://www.gocitywideswla.com/ (owner selected). HTML paths end in `
 
 ## Hosting and domain
 
-1. Connect the GitHub repository to the existing Vercel project. Framework Other, root `./`, Node 24, build `node scripts/build.mjs`, output `dist`. Keep preview access protection enabled. Validate dynamic form/receipt rewrites on the hosted preview, not just static output.
+1. Connect the GitHub repository to the existing Vercel project. Framework Other, root `./`, Node 24, build `node scripts/build-vercel.mjs`, output `dist`. Keep preview access protection enabled. Validate dynamic form/receipt rewrites on the hosted preview, not just static output.
 2. Add www.gocitywideswla.com and its apex in Vercel. Copy the exact DNS instructions shown for that project into Cloudflare after checking existing records. Keep Cloudflare as the DNS provider; leave mail records unchanged. Prefer DNS-only for the Vercel web records unless a verified proxy configuration is required.
 3. Set the apex and any owner-controlled former domains to permanent redirects to the chosen HTTPS hostname. Preserve paths, normalizing known slash variants directly to their canonical URL; avoid chains. The application includes explicit 301 path mappings in `vercel.json`. Cross-host HTTPS, ownership and DNS redirects require the actual domain connection and are not claimed complete here.
 4. Do not silently replace another live website or redirect the franchise's gocitywide.com pages; those are separately owned.

@@ -99,3 +99,30 @@ test("form and contact events contain page context only and stop after consent w
   b.events.focusin();
   assert.equal(b.window.dataLayer.length, 4);
 });
+
+test("service interest uses approved categories only and measurement errors do not break actions", () => {
+  const b = browser({ consent: true });
+  const sent = [];
+  b.window.cityWideAnalyticsSend = (payload) => sent.push(payload);
+  const click = (href) =>
+    b.events.click({
+      target: {
+        closest: () => ({
+          getAttribute: () => href,
+          dataset: { event: "service_cta_click" },
+        }),
+      },
+    });
+  click("/request-walkthrough/?service=carpet-care");
+  assert.equal(sent[0].service_interest, "carpet-care");
+  click("/request-walkthrough/?service=private-email@example.com");
+  assert.equal(sent[1].service_interest, undefined);
+  assert.ok(!JSON.stringify(sent).includes("private-email"));
+  b.window.cityWideAnalyticsSend = () => {
+    throw new Error("vendor unavailable");
+  };
+  assert.doesNotThrow(() => click("/services/commercial-cleaning/"));
+  b.window.cityWideAnalyticsConsent = false;
+  click("/services/carpet-care/");
+  assert.equal(b.window.dataLayer.length, 3);
+});

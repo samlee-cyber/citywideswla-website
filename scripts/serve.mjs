@@ -82,6 +82,22 @@ createServer(async (req, res) => {
       );
       return;
     }
+    // Opt-in local lab instrumentation, never included in the deployment output.
+    if (
+      extname(file) === ".html" &&
+      new URL(req.url, "http://localhost").searchParams.has("lab")
+    ) {
+      content = content.toString().replace(
+        "</body>",
+        `<output id="lab-metrics" style="position:fixed;top:0;right:0;z-index:999;background:white;color:black;font:12px monospace;padding:8px"></output><script>
+        const lab = { viewport: innerWidth, lcp: null, cls: 0, inp: null };
+        try { new PerformanceObserver(list => { for(const e of list.getEntries()) lab.lcp=e.startTime; }).observe({type:'largest-contentful-paint',buffered:true}); } catch {}
+        try { new PerformanceObserver(list => { for(const e of list.getEntries()) if(!e.hadRecentInput) lab.cls+=e.value; }).observe({type:'layout-shift',buffered:true}); } catch {}
+        try { new PerformanceObserver(list => { for(const e of list.getEntries()) if(e.interactionId) lab.inp=Math.max(lab.inp||0,e.duration); }).observe({type:'event',buffered:true,durationThreshold:16}); } catch {}
+        setInterval(() => { const n=performance.getEntriesByType('navigation')[0]; document.getElementById('lab-metrics').textContent=JSON.stringify({...lab,ttfb:n?.responseStart-n?.requestStart,load:n?.loadEventEnd}); },500);
+      </script></body>`,
+      );
+    }
     res.writeHead(200, {
       "Content-Type": types[extname(file)] || "application/octet-stream",
       "Cache-Control": "no-store",

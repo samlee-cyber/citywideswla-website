@@ -1,3 +1,4 @@
+import formConfig from "../api/form-config.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -433,7 +434,7 @@ test("native walkthrough GET prefills only known services and preserves the API 
     ["", null],
   ]) {
     const r = res();
-    await htmlHandler({ env: {} })(
+    await htmlHandler({ env })(
       req(null, { method: "GET", url: "/request-walkthrough/" + query }),
       r,
     );
@@ -445,5 +446,41 @@ test("native walkthrough GET prefills only known services and preserves the API 
     assert.equal(selected, expected);
     assert.match(r.body, /Managed Janitorial Services \(commercial cleaning\)/);
     assert.ok(!r.body.includes("<script>"));
+  }
+});
+
+test("unconfigured HTML is call-first with no form or editable fields; failed older submissions retain details safely", async () => {
+  const r = res();
+  await htmlHandler({ env: {} })(
+    req(null, { method: "GET", url: "/request-walkthrough/?service=hvac" }),
+    r,
+  );
+  assert.match(r.body, /Online requests are not available yet/);
+  assert.match(r.body, /Service interest: <strong>HVAC/);
+  assert.ok(!/<form|<input|<select|type="submit"/.test(r.body));
+  const failed = res();
+  await htmlHandler({ env: {} })(req(payload), failed);
+  assert.equal(failed.statusCode, 503);
+  assert.match(failed.body, /Your request has not been sent/);
+  assert.match(failed.body, /Jordan Example/);
+  assert.ok(!failed.body.includes("<form"));
+});
+
+test("configuration discovery reflects server configuration without exposing credentials", () => {
+  for (const configuredEnv of [{}, env]) {
+    let body;
+    formConfig(
+      {},
+      {
+        setHeader() {},
+        end(value) {
+          body = JSON.parse(value);
+        },
+      },
+      { env: configuredEnv },
+    );
+    assert.equal(body.ready, configured(configuredEnv));
+    assert.match(body.note, /separate verification/);
+    assert.ok(!JSON.stringify(body).includes("test-only"));
   }
 });

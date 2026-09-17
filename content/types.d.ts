@@ -32,6 +32,7 @@ export interface Page {
   summary?: string;
   icon?: string;
   navOrder?: number;
+  collectionType?: "case-study" | "resource";
   city?: string;
   author?: string;
   sources?: string[];
