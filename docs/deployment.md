@@ -16,3 +16,9 @@ The revision targets a protected preview. Production launch and the www.gocitywi
 - Vercel sign-in protection was enabled and the original homepage was verified in signed-in Edge.
 
 This older URL does not contain the multi-page implementation described in the current verification report. No Cloudflare DNS records were modified by this work.
+
+## Vercel dynamic route precedence
+
+Vercel builds use `node scripts/build-vercel.mjs`. It builds the site, then removes the static walkthrough and receipt directories so the configured rewrites reach the server functions. Local preview and static checks still use `scripts/build.mjs`. See [Vercel rewrite precedence](https://vercel.com/docs/project-configuration/vercel-json#rewrites). The dedicated build regression test verifies these paths cannot shadow their functions.
+
+The production project is `citywideswla/city-wide-swla-website`, connected to GitHub `main`, with `www.gocitywideswla.com` assigned. `SITE_LAUNCH=production` is configured in the Production environment; construction and receipt pages remain noindex. Intake credentials are still pending.

@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "node scripts/build.mjs",
+  "buildCommand": "node scripts/build-vercel.mjs",
   "outputDirectory": "dist",
   "functions": {
     "api/**/*.mjs": {
