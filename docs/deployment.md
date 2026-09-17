@@ -1,18 +1,18 @@
-# Verified design preview
+# Deployment status
+
+## Current revision
+
+The current source is in the `citywideswla-website` repository directory, isolated from the unrelated application in the parent workspace. The revised site is verified locally at http://127.0.0.1:4174/ while its preview process is running.
+
+A preview upload to the existing `city-wide-swla-concept` Vercel project was attempted on September 16, 2026. Automatic approval review rejected the upload because it exceeded the 200,000-byte review limit. No new Vercel preview was created by that attempt. Deployment remains pending an approved release path; no alternative deployment was used to bypass the rejection.
+
+The revision targets a protected preview. Production launch and the www.gocitywideswla.com domain require the setup and checks in search-launch.md. Intake credentials and a real delivery test are also outstanding. Do not promote a preview noindex build directly to production: rebuild with production settings after launch approval.
+
+## Historical concept preview (not the revision)
 
 - URL: https://city-wide-swla-concept-bchm65s3d-citywideswla.vercel.app/
-- Vercel project: city-wide-swla-concept
-- Scope: citywideswla
-- Deployment ID: dpl_71KdioAh6MpwRTa67QVwCkM8aEMp
-- Inspector: https://vercel.com/citywideswla/city-wide-swla-concept/71KdioAh6MpwRTa67QVwCkM8aEMp
-- Target requested: preview
-- Browser verification: homepage renders; official logo and both WebP images load; no desktop horizontal overflow; noindex,nofollow metadata is present.
-- Access: Vercel sign-in protection is enabled. The signed-in Edge session successfully displayed the site. The in-app browser without Vercel login was redirected to sign-in.
-- Live lead delivery: not connected. No recipient or credentials have been supplied. Direct browser navigation to the configuration API was blocked by the browser client; hosted API behavior is not independently verified. Local mocked handler tests pass.
-- Production domain: not connected by this task. Cloudflare DNS was not modified.
+- Project: city-wide-swla-concept; scope citywideswla
+- Deployment: dpl_71KdioAh6MpwRTa67QVwCkM8aEMp
+- Vercel sign-in protection was enabled and the original homepage was verified in signed-in Edge.
 
-## Workspace separation
-
-During this work, another project was written to the parent workspace and replaced the package and Vercel configuration with a Next.js setup. The initial upload mixed those files with this concept and failed. The final concept is isolated in `design-preview/`, with its own configuration and deployment. Parent project files were not reverted.
-
-The earlier city-wide-swla deployment (dpl_77qFYyrGDGA3u223TKTx4yUZCDya) failed and is superseded by the concept deployment above. Do not use the earlier URL as the deliverable.
+This older URL does not contain the multi-page implementation described in the current verification report. No Cloudflare DNS records were modified by this work.

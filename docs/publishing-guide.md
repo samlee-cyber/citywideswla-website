@@ -17,7 +17,7 @@ Do not edit `dist/`; each build replaces it. Changes to a shared template affect
 2. Record `approval.facts: true`, `approval.content: true`, and a source/approval reference in `approval.evidence`. Evidence should be a non-sensitive reference, not a copied private document.
 3. Set genuine `publishedAt` and `updatedAt` dates. Update dates only for meaningful changes. Resources and case studies require a real author, dates and sources. Do not invent a reviewer.
 4. Change `status` from `construction` to `published`. This is the final editorial switch. A missing or invalid status, or missing approval, stays in construction.
-5. Run `npm run build`, `npm run check`, and `npm test`. For a production-indexing check run `VERCEL_ENV=production SITE_LAUNCH=production npm run build` and the same environment for `npm run check`.
+5. Run `npm run build`, `npm run check`, `npm run typecheck`, and `npm test`. For a production-indexing check run `VERCEL_ENV=production SITE_LAUNCH=production npm run build` and the same environment for `npm run check`.
 6. Inspect the protected Vercel preview on desktop/mobile. Redeploy production after approval. A static rebuild is required: it changes page HTML, meta robots, JSON-LD, hub badges, contextual related links, and sitemap together.
 
 To unpublish, change status to `construction`, rebuild and redeploy. The page stays available with its correct headings, layout, development notices and contact CTA, while schema claims disappear and the sitemap excludes it. Crawlers must be able to fetch it to read noindex. Do not block it in robots.txt.

@@ -1,18 +1,137 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp,readFile,rm} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';
-import {pages} from '../content/pages.mjs';import {business} from '../content/business.mjs';import {customers,approvedCustomers} from '../content/customers.mjs';import {build} from './build.mjs';import {renderPage,schema} from '../lib/render.mjs';import {isPublished,validateRegistry} from '../lib/publication.mjs';
-test('construction → published → construction updates initial HTML, sitemap, schema and related lists in real builds',async()=>{
- const dir=await mkdtemp(join(tmpdir(),'cw-lifecycle-'));const registry=structuredClone(pages);const p=registry.find(p=>p.slug==='/services/hard-floor-care/');const cleaning=registry.find(p=>p.slug==='/services/commercial-cleaning/');cleaning.relationships.push(p.slug);
- const check=async published=>{await build({registry,out:dir,production:true});const html=await readFile(join(dir,p.slug,'index.html'),'utf8');const map=await readFile(join(dir,'sitemap.xml'),'utf8');assert.equal(html.includes('Page in Construction'),!published);assert.equal(html.includes('content="index, follow"'),published);assert.equal(map.includes(business.url+p.slug),published);assert.equal(html.includes('"@type":"Service"'),published);const linked=await readFile(join(dir,cleaning.slug,'index.html'),'utf8');const related=linked.split('<section class="related">')[1].split('</section>')[0];assert.equal(related.includes(p.slug),published);};
- try{await check(false);Object.assign(p,{status:'published',approval:{facts:true,content:true,evidence:['Fictional test fixture only']},content:[{heading:'Test scope',paragraphs:['Test fixture, never deployed.']}],updatedAt:'2026-09-16'});await check(true);p.status='construction';await check(false);}finally{await rm(dir,{recursive:true,force:true});}
+import test from "node:test";
+import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pages } from "../content/pages.mjs";
+import { business } from "../content/business.mjs";
+import { customers, approvedCustomers } from "../content/customers.mjs";
+import { build } from "./build.mjs";
+import { renderPage, schema } from "../lib/render.mjs";
+import { isPublished, validateRegistry } from "../lib/publication.mjs";
+test("construction → published → construction updates initial HTML, sitemap, schema and related lists in real builds", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "cw-lifecycle-"));
+  const registry = structuredClone(pages);
+  const p = registry.find((p) => p.slug === "/services/hard-floor-care/");
+  const cleaning = registry.find(
+    (p) => p.slug === "/services/commercial-cleaning/",
+  );
+  cleaning.relationships.push(p.slug);
+  const check = async (published) => {
+    await build({ registry, out: dir, production: true });
+    const html = await readFile(join(dir, p.slug, "index.html"), "utf8");
+    const map = await readFile(join(dir, "sitemap.xml"), "utf8");
+    assert.equal(html.includes("Page in Construction"), !published);
+    assert.equal(html.includes('content="index, follow"'), published);
+    assert.equal(map.includes(business.url + p.slug), published);
+    assert.equal(html.includes('"@type":"Service"'), published);
+    const linked = await readFile(
+      join(dir, cleaning.slug, "index.html"),
+      "utf8",
+    );
+    const related = linked
+      .split('<section class="related">')[1]
+      .split("</section>")[0];
+    assert.equal(related.includes(p.slug), published);
+  };
+  try {
+    await check(false);
+    Object.assign(p, {
+      status: "published",
+      approval: {
+        facts: true,
+        content: true,
+        evidence: ["Fictional test fixture only"],
+      },
+      content: [
+        {
+          heading: "Test scope",
+          paragraphs: ["Test fixture, never deployed."],
+        },
+      ],
+      updatedAt: "2026-09-16",
+    });
+    await check(true);
+    p.status = "construction";
+    await check(false);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
-test('invalid status or missing approval stays construction; receipt never gets entity claims',()=>{
- const p=structuredClone(pages.find(p=>p.type==='service'));p.status='typo';assert.equal(isPublished(p),false);assert.match(renderPage(p,{production:true}),/noindex, nofollow/);p.status='published';p.approval.facts=false;assert.equal(schema(p,pages),null);assert.equal(schema(pages.find(p=>p.type==='utility'),pages),null);
+test("invalid status or missing approval stays construction; receipt never gets entity claims", () => {
+  const p = structuredClone(pages.find((p) => p.type === "service"));
+  p.status = "typo";
+  assert.equal(isPublished(p), false);
+  assert.match(renderPage(p, { production: true }), /noindex, nofollow/);
+  p.status = "published";
+  p.approval.facts = false;
+  assert.equal(schema(p, pages), null);
+  assert.equal(
+    schema(
+      pages.find((p) => p.type === "utility"),
+      pages,
+    ),
+    null,
+  );
 });
-test('customer names and logos are separately gated and absent from all current public HTML/schema',()=>{
- assert.deepEqual(approvedCustomers(),[]);const c={id:'fictional',name:'Fictional Client',industry:'commercial-office',displayApproved:false,nameApproved:true,approvalEvidence:'test',relationshipLabel:'Past project',relationshipStatus:'past',logo:'/assets/test.png'};assert.equal(approvedCustomers([c])[0].logo,null);c.displayApproved=true;assert.equal(approvedCustomers([c])[0].logo,'/assets/test.png');
- for(const p of pages){const html=renderPage(p);for(const customer of customers)assert.ok(!html.includes(customer.name),`${customer.name} leaked on ${p.slug}`);}
+test("customer names and logos are separately gated and absent from all current public HTML/schema", () => {
+  assert.deepEqual(approvedCustomers(), []);
+  const c = {
+    id: "fictional",
+    name: "Fictional Client",
+    industry: "commercial-office",
+    displayApproved: false,
+    nameApproved: true,
+    approvalEvidence: "test",
+    relationshipLabel: "Past project",
+    relationshipStatus: "past",
+    logo: "/assets/test.png",
+  };
+  assert.equal(approvedCustomers([c])[0].logo, null);
+  c.displayApproved = true;
+  assert.equal(approvedCustomers([c])[0].logo, "/assets/test.png");
+  for (const p of pages) {
+    const html = renderPage(p);
+    for (const customer of customers)
+      assert.ok(
+        !html.includes(customer.name),
+        `${customer.name} leaked on ${p.slug}`,
+      );
+  }
 });
-test('case study and article templates are real templates; no fictional projects ship',()=>{
- const fixture={...structuredClone(pages.find(p=>p.type==='resource')),slug:'/case-studies/test-fixture/',type:'case-study',status:'construction',plannedSections:['Challenge','Objectives','Services','Approach','Operational considerations','Verified results','Why it worked']};assert.match(renderPage(fixture),/Page in Construction/);assert.equal(pages.filter(p=>p.type==='case-study').length,0);
- fixture.status='published';fixture.approval={facts:true,content:true,evidence:['Test-only approval']};fixture.content=[{heading:'Challenge',paragraphs:['Fictional test only']}];assert.throws(()=>validateRegistry([...pages,fixture]),/author/);fixture.author='Fictional Test Author';fixture.publishedAt='2026-09-16';fixture.updatedAt='2026-09-16';assert.throws(()=>validateRegistry([...pages,fixture]),/verified results/);
+test("case study and article templates are real templates; no fictional projects ship", () => {
+  const fixture = {
+    ...structuredClone(pages.find((p) => p.type === "resource")),
+    slug: "/case-studies/test-fixture/",
+    type: "case-study",
+    status: "construction",
+    plannedSections: [
+      "Challenge",
+      "Objectives",
+      "Services",
+      "Approach",
+      "Operational considerations",
+      "Verified results",
+      "Why it worked",
+    ],
+  };
+  assert.match(renderPage(fixture), /Page in Construction/);
+  assert.equal(pages.filter((p) => p.type === "case-study").length, 0);
+  fixture.status = "published";
+  fixture.approval = {
+    facts: true,
+    content: true,
+    evidence: ["Test-only approval"],
+  };
+  fixture.content = [
+    { heading: "Challenge", paragraphs: ["Fictional test only"] },
+  ];
+  assert.throws(() => validateRegistry([...pages, fixture]), /author/);
+  fixture.author = "Fictional Test Author";
+  fixture.publishedAt = "2026-09-16";
+  fixture.updatedAt = "2026-09-16";
+  assert.throws(
+    () => validateRegistry([...pages, fixture]),
+    /verified results/,
+  );
 });

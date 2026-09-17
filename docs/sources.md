@@ -50,7 +50,7 @@ Technical references consulted:
 - https://developers.google.com/search/docs/crawling-indexing/block-indexing
 - https://developers.google.com/search/docs/appearance/ai-features
 - https://developers.openai.com/api/docs/bots
-- https://privacy.anthropic.com/en/articles/10019625-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler
+- https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler
 - https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
 - https://vercel.com/docs/project-configuration
 - https://upstash.com/docs/redis/features/restapi
