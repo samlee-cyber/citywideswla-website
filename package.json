@@ -1,12 +1,13 @@
 {
-  "name": "city-wide-swla-concept",
+  "name": "citywideswla-website",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs",
     "check": "node scripts/check.mjs",
-    "test": "node --test scripts/lead.test.mjs"
+    "test": "node --test scripts/*.test.mjs",
+    "typecheck": "npx --yes --package=typescript@5.9.3 tsc -p jsconfig.json"
   },
   "engines": {
     "node": "24.x"

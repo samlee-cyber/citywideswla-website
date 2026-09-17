@@ -1,32 +1,30 @@
-# City Wide SWLA design preview
+# City Wide Southwest Los Angeles website
 
-This website uses the current City Wide identity and the City Wide Boston reference. It includes a responsive homepage, local service information, and a custom walkthrough request form.
-
-## Run locally
-
-Requires Node.js 24. No dependencies need to be installed.
+Brand-aligned commercial cleaning and facility services site for **https://www.gocitywideswla.com**. Static HTML/CSS/browser JavaScript, a typed content registry and Node 24 functions on Vercel. Cloudflare can remain the DNS provider. No runtime packages are required.
 
 ```sh
-node scripts/build.mjs
-node scripts/check.mjs
-node --test scripts/lead.test.mjs
-node scripts/serve.mjs
+npm run build
+npm run check
+npm run typecheck
+npm test
+npm run preview
 ```
 
-Open http://127.0.0.1:4173. Stop any other server on this port first. Edit files in `public/`, rebuild, and reload. Vercel builds to `dist/` using `vercel.json`; `/api` contains the form functions.
+Local preview: http://127.0.0.1:4174. Optional local-only `?nojs=1` uses a CSP that blocks scripts for native form/navigation checks. Production does not expose this testing switch.
 
-## Import this repository into Vercel
+## Documentation
 
-Import `samlee-cyber/citywideswla-website` and select the `main` branch. Use the repository root (`./`) as the Root Directory and **Other** as the Framework Preset. The included `vercel.json` supplies the Build Command (`node scripts/build.mjs`) and Output Directory (`dist`). Use Node.js 24.x. No dependency installation or framework setup is needed.
+- [Baseline and decisions](docs/seo-ai-agent-audit.md)
+- [Owner editing and publishing guide](docs/publishing-guide.md)
+- [Intake setup and delivery tests](docs/intake-setup.md)
+- [Domain, search and crawler setup](docs/search-launch.md)
+- [Verification and remaining dependencies](docs/verification.md)
+- [Source ledger](docs/sources.md)
 
-Deploying creates a reviewable website immediately. Leave `SITE_LAUNCH` unset until the site is ready for search indexing. The walkthrough form requires the destination and provider credentials below before it can send requests. Connect `www.citywideswla.com` only when ready to switch the live site.
+## Vercel import
 
-## Preview versus launch
+Import `samlee-cyber/citywideswla-website`. Use the repository root, framework **Other**, Node **24.x**; build/output/routing are in `vercel.json`. Keep deployment protection on for previews. Credentials go in Vercel, never in source. See `.env.example` for the names.
 
-All builds are noindex unless BOTH `VERCEL_ENV=production` and `SITE_LAUNCH=production` are set. Leave `SITE_LAUNCH` unset for concept previews. The intended production domain is www.citywideswla.com, but no production DNS records have been changed.
+A normal build is noindex. Production indexing requires `VERCEL_ENV=production` and `SITE_LAUNCH=production`. Rebuild in that environment for launch; do not promote a preview's noindex HTML unchanged.
 
-## Lead routing
-
-The business owner requested a separate local inbox or CRM, not the franchise HubSpot form. The exact destination is pending. The included email adapter uses Resend and Cloudflare Turnstile. Set the variables in `.env.example` securely in Vercel after confirming the destination and sending provider. The UI does not report success when the endpoint is unconfigured. API keys never enter browser code. Mocked tests send no email.
-
-See `docs/launch-plan.md`, `docs/sources.md`, and `docs/verification.md` for handoff details.
+Online intake intentionally fails closed until the inbox, sender and durable duplicate/rate-control credentials are configured. It supports a native HTML form and a shared JSON endpoint documented at `/openapi.json`; successful receipt requires an acknowledged email handoff.

@@ -1,25 +1,37 @@
-# Verification — September 16, 2026
+# Revision verification — September 16, 2026
 
-## Completed
+## Completed locally
 
-- Static build passes, without package installation.
-- Checks passed for unique element IDs, in-page anchor targets, asset references, one H1, canonical URL, phone number, and preview indexing.
-- Desktop browser review completed for the homepage and local contact form.
-- At 390 × 844: reviewed hero and contact form; no horizontal overflow; opened mobile navigation and verified it closes after following a link.
-- Service filtering: Exterior services shows Windows & pressure washing and Parking lot services; All services restores the catalogue.
-- All homepage images loaded successfully in the local browser.
-- Submitted non-sensitive test values locally: unavailable delivery is reported explicitly; no success is fabricated and entered details remain available.
-- Seven Node test results passed (six subtests plus suite) for the lead endpoint. Cases include unavailable delivery, invalid input, foreign origin, rejected anti-spam verification, incorrect challenge hostname/action, provider failure, and accepted email handoff with a fixed recipient and idempotency key.
-- Raster website assets were converted to WebP for delivery; source JPGs remain available locally.
+- Preview and production-mode builds pass. The production-mode test is a local build, not a production deployment. Restored the local preview to noindex after the check.
+- 43 registered routes: 10 published-content pages, 32 construction pages, and one permanently noindex receipt utility. Case-study detail templates are available for real project records; no fictional project route ships.
+- Static crawl: 1,222 internal references resolve; one H1 per page, unique indexable titles/descriptions, canonical URLs, valid JSON-LD parsing, image dimensions/alt text, no orphaned published pages, and expected sitemap membership.
+- HTTP crawl: all 43 pages return 200; 93 configured path redirects return direct 301s to live targets. Unknown paths and unknown case-study slugs return genuine 404s.
+- Construction → published → construction was exercised through three real temporary builds. Initial HTML robots directives, placeholders, sitemap, Service schema and contextual related links all follow the one status change.
+- Typed registry passes TypeScript 5.9.3 with `jsconfig.json`. All JavaScript files pass Node syntax checks. Prettier 3.6.2 formatted the source.
+- 19 automated tests pass: consent and conversion deduplication; field validation; missing configuration; origin/CSRF; honeypot/body limits; duplicate requests and concurrency; throttling; storage/email failure; HTML 303 receipt; forged/direct receipts; API response contract; provider adapter arguments; customer gates; content lifecycle; case-study publication requirements.
+- HTTP API invalid input returns 422 with stable field errors. OpenAPI exposes exactly one public action. Robots permits fetching public construction pages. Local requests from Googlebot, Bingbot, OAI-SearchBot, Claude-SearchBot and Claude-User user agents receive 200. These tests do not validate production CDN/WAF behavior.
+- Browser: reviewed desktop homepage, Commercial Cleaning detail, About/portrait, and case-study empty state/filter; reviewed mobile homepage, service hub, construction template and form at 390 × 844. No horizontal overflow in measured views. Native mobile menu opens, follows links and closes with JavaScript enabled.
+- Browser native POST with JavaScript enabled and with scripts blocked by a local-only CSP returns an honest unavailable-delivery error and preserves fictional test input. Error summary receives focus. No conversion receipt is generated. No real message was sent.
+- Image audit: only official logo, official cleaning photo, illustrative workplace photo, official standalone Sam Lee portrait and favicon are public. The original proposal proof image and candidate customer logos are not included.
 
-## Still required for production
+## Performance budget
 
-- Confirm the destination inbox or CRM and securely connect the sending credentials.
-- Verify a real test inquiry arrives at the intended destination, including failure monitoring and spam handling.
-- Verify final privacy content against the configured providers and business practices.
-- Connect the production domains and validate HTTPS, redirect, production indexing, and sitemap.
-- Gather permissioned local project photography/testimonials for the Boston-inspired proof sections.
+Same-file byte comparison against baseline fdb2c52, gzip generated locally for a consistent comparison (not a measured network transfer):
 
-No production DNS records have been changed. The local server is a development preview; live form APIs run on Vercel, once configured.
+| Asset | Original bytes | Revised bytes | Original gzip | Revised gzip |
+| --- | ---: | ---: | ---: | ---: |
+| Homepage HTML | 21,146 | 22,532 | 6,288 | 5,214 |
+| CSS | 21,472 | 26,124 | 5,235 | 5,240 |
+| JavaScript | 4,570 | 3,061 | 1,715 | 1,155 |
 
-The isolated Vercel concept was subsequently verified in the signed-in browser: homepage rendered, all four image elements loaded, and `noindex, nofollow` was present. See `deployment.md`. The hosted form API remains unverified and live delivery is not configured.
+Combined compressed HTML/CSS/JS decreases from 13,238 to 11,609 bytes (about 12%). Homepage raster assets are unchanged. The owner portrait adds 23,873 bytes only on About and is lazy-loaded. System fonts, deferred script, explicit image dimensions and below-fold lazy loading are retained. No new third-party frontend script is loaded. More catalogue cards increase homepage length intentionally.
+
+No Lighthouse score, field Core Web Vitals, screen-reader session, or production latency claim is made. Inspect field performance after real domain launch and collect a repeatable Lighthouse baseline on the deployed revision.
+
+## Explicit remaining dependencies
+
+1. The revised Vercel preview upload was blocked by automatic approval review because its inline upload exceeded the 200,000-byte review limit. The previous concept URL is not this revision. Hosted function rewrites and headers still need verification on the new deployment.
+2. Receiving local inbox or CRM, verified sender, Resend credential, durable Redis endpoint/token and signing secret. Exact setup is in intake-setup.md. Real Redis Lua execution and one live inbox receipt/retry test remain pending.
+3. Domain ownership, Vercel connection and Cloudflare DNS/WAF checks for www.gocitywideswla.com. No production DNS or account security settings changed.
+4. Approved substantive content for 32 construction pages, real case studies, separate client-name/logo disclosure permissions, and optional owner-reviewed operating facts.
+5. Analytics/consent integration, search-account verification, listing audit and training-crawler choices. No rankings or AI citations promised.
