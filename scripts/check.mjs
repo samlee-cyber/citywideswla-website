@@ -1,0 +1,13 @@
+import { readFile, access } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const html = await readFile('public/index.html', 'utf8');
+const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+assert.equal(new Set(ids).size, ids.length, 'Duplicate element IDs');
+for (const [, anchor] of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(anchor), `Missing anchor: ${anchor}`);
+for (const [, asset] of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) if (asset !== '/') await access('public' + asset);
+assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Expected one main heading');
+assert.ok(html.includes('https://www.citywideswla.com/'), 'Production canonical missing');
+assert.ok(html.includes('tel:+15624733136'), 'Verified phone number missing');
+const built = await readFile('dist/index.html', 'utf8');
+assert.equal(built.includes('noindex, nofollow'), (process.env.VERCEL_ENV !== 'production' || process.env.SITE_LAUNCH !== 'production'), 'Incorrect indexing for target environment');
+console.log('Passed: unique IDs, internal anchor targets, local asset references, main heading, canonical, contact number, and environment indexing.');
