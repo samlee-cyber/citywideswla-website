@@ -1,4 +1,4 @@
-export type PageType = 'home' | 'hub' | 'service' | 'industry' | 'location' | 'case-study' | 'resource' | 'about' | 'action' | 'utility';
+export type PageType = 'page' | 'home' | 'hub' | 'service' | 'industry' | 'location' | 'case-study' | 'resource' | 'about' | 'action' | 'utility';
 export interface Section { heading: string; paragraphs?: string[]; items?: string[]; }
 export interface Page {
   slug: string; type: PageType; status: 'construction' | 'published';

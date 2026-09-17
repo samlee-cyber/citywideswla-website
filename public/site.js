@@ -1,76 +1,21 @@
-const menuButton = document.querySelector('.menu-toggle');
-const navigation = document.querySelector('#main-nav');
-function closeMenu() { navigation.classList.remove('open'); menuButton.setAttribute('aria-expanded', 'false'); }
-menuButton.addEventListener('click', () => { const open = menuButton.getAttribute('aria-expanded') !== 'true'; menuButton.setAttribute('aria-expanded', String(open)); navigation.classList.toggle('open', open); });
-navigation.addEventListener('click', (event) => { if (event.target.closest('a')) closeMenu(); });
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') { closeMenu(); menuButton.focus(); } });
-document.addEventListener('click', (event) => { if (!event.target.closest('.header')) closeMenu(); });
-window.matchMedia('(min-width: 941px)').addEventListener('change', closeMenu);
-document.querySelector('#year').textContent = new Date().getFullYear();
-
-const filters = document.querySelectorAll('[data-filter]');
-const cards = document.querySelectorAll('[data-category]');
-for (const button of filters) {
-  button.addEventListener('click', () => {
-    for (const filter of filters) { const active = filter === button; filter.setAttribute('aria-pressed', String(active)); filter.classList.toggle('active', active); }
-    let visible = 0;
-    for (const card of cards) { card.hidden = button.dataset.filter !== 'all' && button.dataset.filter !== card.dataset.category; if (!card.hidden) visible++; }
-    document.querySelector('#filter-status').textContent = `${visible} service ${visible === 1 ? 'category' : 'categories'} shown.`;
-  });
-}
-
-const leadForm = document.querySelector('#lead-form');
-const formStatus = document.querySelector('#form-status');
-const sendButton = document.querySelector('#send-request');
-let formConfig;
-let widgetId;
-let loadingConfig;
-let requestId = crypto.randomUUID();
-function showFormStatus(message) { formStatus.hidden = false; formStatus.textContent = message; }
-async function prepareForm() {
-  if (loadingConfig) return loadingConfig;
-  loadingConfig = (async () => {
-    try {
-      const response = await fetch('/api/form-config');
-      if (!response.ok) throw new Error('unavailable');
-      formConfig = await response.json();
-      if (!formConfig.ready) return;
-      await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.append(script);
-      });
-      widgetId = window.turnstile.render('#turnstile-widget', { sitekey: formConfig.siteKey, action: 'walkthrough', theme: 'light' });
-    } catch { formConfig = { ready: false }; }
-  })();
-  return loadingConfig;
-}
-leadForm.addEventListener('focusin', prepareForm, { once: true });
-leadForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  if (!leadForm.reportValidity() || sendButton.disabled) return;
-  sendButton.disabled = true;
-  try {
-    await prepareForm();
-    if (!formConfig?.ready) { showFormStatus('Online requests are not available yet. Your request has not been sent. Please call (562) 473-3136 to arrange a walkthrough.'); return; }
-    const token = window.turnstile?.getResponse(widgetId);
-    if (!token) { showFormStatus('Please complete the security check, then send your request.'); return; }
-    showFormStatus('Sending your request…');
-    const payload = Object.fromEntries(new FormData(leadForm));
-    payload.token = token;
-    payload.requestId = requestId;
-    const response = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(25000) });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'We couldn’t send your request. Please try again or call (562) 473-3136.');
-    showFormStatus('Thank you. Your request has been received. Our Southwest Los Angeles team will follow up with you.');
-    leadForm.reset();
-    requestId = crypto.randomUUID();
-  } catch (error) {
-    showFormStatus(error.name === 'TimeoutError' ? 'We couldn’t confirm delivery. Please call (562) 473-3136, or try again. Your details are still here.' : (error.message || 'We couldn’t send your request. Please call (562) 473-3136.'));
-  } finally {
-    sendButton.disabled = false;
-    if (widgetId !== undefined) window.turnstile?.reset(widgetId);
-  }
-});
+const menu=document.querySelector('.navigation');
+// Native details keeps navigation usable when JavaScript is disabled.
+const desktop=matchMedia('(min-width:1101px)');
+function syncMenu(){if(desktop.matches)menu.open=true;else menu.open=false;}
+syncMenu();desktop.addEventListener('change',syncMenu);
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!desktop.matches&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
+menu.addEventListener('click',event=>{if(event.target.closest('a')&&!desktop.matches)menu.open=false;});
+document.querySelectorAll('[data-case-filter]').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('[data-case-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ let count=0;document.querySelectorAll('[data-case-category]').forEach(card=>{card.hidden=button.dataset.caseFilter!=='All'&&card.dataset.caseCategory!==button.dataset.caseFilter;if(!card.hidden)count++;});
+ document.querySelector('#filter-status').textContent=count?`${count} case studies shown.`:'No approved case studies in this category yet.';
+}));
+// Analytics adapter: no vendor is installed. Explicit consent is required.
+const allowedEvents=new Set(['walkthrough_form_view','walkthrough_form_start','walkthrough_form_submit_success','walkthrough_form_submit_error','phone_click','email_click','service_cta_click','case_study_cta_click']);
+function track(event){if(!allowedEvents.has(event)||window.cityWideAnalyticsConsent!==true)return;window.dataLayer=window.dataLayer||[];window.dataLayer.push({event,page_path:document.body.dataset.page});}
+const form=document.querySelector('#walkthrough-form');
+if(form){track('walkthrough_form_view');form.addEventListener('focusin',()=>track('walkthrough_form_start'),{once:true});}
+if(document.querySelector('.error-summary'))track('walkthrough_form_submit_error');
+function trackReceipt(){const id=document.body.dataset.receipt;if(!id||window.cityWideAnalyticsConsent!==true)return;try{const key='cw-received-'+id;if(!sessionStorage.getItem(key)){track('walkthrough_form_submit_success');sessionStorage.setItem(key,'1');}}catch{/* No storage: avoid an undeduplicated conversion. */}}
+trackReceipt();window.addEventListener('citywide:analytics-consent',()=>{if(form)track('walkthrough_form_view');trackReceipt();});
+document.addEventListener('click',event=>{const a=event.target.closest('a');if(!a)return;if(a.getAttribute('href')?.startsWith('tel:'))track('phone_click');else if(a.getAttribute('href')?.startsWith('mailto:'))track('email_click');else if(a.dataset.event)track(a.dataset.event);});
